@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Pacientes y Usuarios</title>
+</head>
+<body>
+
+<!-- ================= PACIENTES ================= -->
+<h2>👨‍⚕️ Pacientes</h2>
+
+<!-- Input para nombre del paciente -->
+<input type="text" id="nombrePaciente" placeholder="Nombre">
+
+<!-- Input para edad del paciente -->
+<input type="number" id="edadPaciente" placeholder="Edad">
+
+<!-- Botón que llama la función agregarPaciente -->
+<button onclick="agregarPaciente()">Agregar</button>
+
+<!-- Lista donde se mostrarán los pacientes -->
+<ul id="listaPacientes"></ul>
+
+<hr>
+
+<!-- ================= USUARIOS ================= -->
+<h2>👤 Usuarios</h2>
+
+<!-- Input para nombre de usuario -->
+<input type="text" id="nombreUsuario" placeholder="Usuario">
+
+<!-- Input para contraseña -->
+<input type="password" id="claveUsuario" placeholder="Clave">
+
+<!-- Botón para agregar usuario -->
+<button onclick="agregarUsuario()">Agregar</button>
+
+<!-- Lista donde se mostrarán los usuarios -->
+<ul id="listaUsuarios"></ul>
+
+<script>
+
+// ================= PACIENTES =================
+
+// Carga los pacientes guardados en el navegador (localStorage)
+// Si no hay nada, inicia con un array vacío []
+let pacientes = JSON.parse(localStorage.getItem("pacientes")) || [];
+
+// Función para agregar paciente
+function agregarPaciente() {
+
+    // Obtiene valores de los inputs
+    let nombre = document.getElementById("nombrePaciente").value;
+    let edad = document.getElementById("edadPaciente").value;
+
+    // Agrega un objeto al array
+    pacientes.push({ nombre, edad });
+
+    // Guarda el array actualizado en el navegador
+    localStorage.setItem("pacientes", JSON.stringify(pacientes));
+
+    // Vuelve a mostrar la lista actualizada
+    mostrarPacientes();
+}
+
+// Función para mostrar pacientes en pantalla
+function mostrarPacientes() {
+
+    // Obtiene el elemento UL
+    let lista = document.getElementById("listaPacientes");
+
+    // Limpia la lista antes de volver a dibujarla
+    lista.innerHTML = "";
+
+    // Recorre el array de pacientes
+    pacientes.forEach((p, i) => {
+
+        // Agrega cada paciente como un <li>
+        lista.innerHTML += `
+            <li>
+                ${p.nombre} - ${p.edad} años
+
+                <!-- Botón eliminar -->
+                <button onclick="eliminarPaciente(${i})">❌</button>
+            </li>
+        `;
+    });
+}
+
+// Función para eliminar paciente por índice
+function eliminarPaciente(i) {
+
+    // Elimina el elemento del array
+    pacientes.splice(i, 1);
+
+    // Guarda cambios en localStorage
+    localStorage.setItem("pacientes", JSON.stringify(pacientes));
+
+    // Actualiza la lista
+    mostrarPacientes();
+}
+
+
+// ================= USUARIOS =================
+
+// Carga usuarios guardados
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+// Función para agregar usuario
+function agregarUsuario() {
+
+    // Obtiene valores
+    let nombre = document.getElementById("nombreUsuario").value;
+    let clave = document.getElementById("claveUsuario").value;
+
+    // Agrega al array
+    usuarios.push({ nombre, clave });
+
+    // Guarda en localStorage
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    // Actualiza lista
+    mostrarUsuarios();
+}
+
+// Función para mostrar usuarios
+function mostrarUsuarios() {
+
+    let lista = document.getElementById("listaUsuarios");
+
+    lista.innerHTML = "";
+
+    // Recorre usuarios
+    usuarios.forEach((u, i) => {
+
+        lista.innerHTML += `
+            <li>
+                ${u.nombre}
+
+                <!-- Botón eliminar -->
+                <button onclick="eliminarUsuario(${i})">❌</button>
+            </li>
+        `;
+    });
+}
+
+// Función eliminar usuario
+function eliminarUsuario(i) {
+
+    usuarios.splice(i, 1);
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    mostrarUsuarios();
+}
+
+
+// ================= INICIALIZACIÓN =================
+
+// Cuando carga la página, muestra los datos guardados
+mostrarPacientes();
+mostrarUsuarios();
+
+</script>
+
+</body>
+</html>
